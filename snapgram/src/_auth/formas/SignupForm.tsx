@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { Link, useNavigate } from "react-router-dom"
 import { useToast } from "@/components/ui/use-toast"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -7,15 +8,16 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { SignupValidation } from "@/lib/validation"
 import Loader from "@/components/shared/Loader"
-import { Link } from "react-router-dom"
-import { useSignInAccount } from "@/lib/react-query/queryAndMutations"
+import { useCreateUserAccount, useSignInAccount } from "@/lib/react-query/queryAndMutations"
+import { useUserContext } from "@/context/AuthContext"
 
 
 const SignupForm = () => {
   const { toast } = useToast()
-
-  const { mutateAsync: createUserAccount, isLoading: isCreatingUser } = useSignInAccount();
-  const { mutateAsync: signInAccount, isLoading: isSigningIn } = useSignInAccount()
+  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+  const navigate = useNavigate()
+  const { mutateAsync: createUserAccount, isPending: isCreatingAccount } = useCreateUserAccount();
+  const { mutateAsync: signInAccount, isPending: isSigningIn } = useSignInAccount()
 
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
@@ -42,7 +44,14 @@ const SignupForm = () => {
       return toast({ title: 'Sign up failed. Please try again.'})
     }
 
-    
+    const isLoggedIn = await checkAuthUser();
+
+    if (isLoggedIn) {
+      form.reset();
+      navigate('/')
+    } else {
+      return toast({ title: 'Sign up failed. Please try again.' })
+    }
   }
   return (
     <Form {...form}>
@@ -106,7 +115,7 @@ const SignupForm = () => {
             )}
           />
           <Button type="submit" className="shad-button_primary">
-            { isCreatingUser ? (
+            {isCreatingAccount ? (
               <div className="flex center gap-2">
                 <Loader /> Loading...
               </div>

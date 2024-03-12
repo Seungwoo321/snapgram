@@ -25,3 +25,6 @@
 
 <https://react-dropzone.js.org/>
 
+### appwrite
+
+- 500 inter server error가 발생한다면 다음 URL에서 이슈가 없는지 확인해본다. <https://status.appwrite.online/>

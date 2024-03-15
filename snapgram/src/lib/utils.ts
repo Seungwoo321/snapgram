@@ -23,7 +23,7 @@ export function formatDateString(dateString: string) {
   return `${formattedDate} at ${time}`;
 }
 
-export function formatData(dateString: string): string {
+export function formatDate(dateString: string): string {
   const currentDate = new Date();
   const inputDate = new Date(dateString);
 

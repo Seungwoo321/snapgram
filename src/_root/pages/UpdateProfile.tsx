@@ -20,6 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/shared/Loader";
 import { ProfileValidation } from "@/lib/validation";
+import ProfileUploader from "@/components/shared/ProfileUploader";
 
 const UpdateProfile = () => {
   const { toast } = useToast();
